@@ -6,9 +6,9 @@ import myhtml
 
 
 
-def GetMP4ByBid(video_id, ffmpeg_config="-c:v copy -c:a aac -strict experimental"):
+def getMP4ByBid(video_id, ffmpeg_config="-c:v copy -c:a aac -strict experimental"):
     pageUrl = "https://www.bilibili.com/video/" + video_id
-    htmlText = myhtml.GetRequestsText(pageUrl, pageUrl)
+    htmlText = myhtml.getRequestsText(pageUrl, pageUrl)
     urlJson = json.loads(re.findall(
         '<script>window\.__playinfo__=(.*?)</script>', htmlText)[0])
 
@@ -17,10 +17,10 @@ def GetMP4ByBid(video_id, ffmpeg_config="-c:v copy -c:a aac -strict experimental
 
     print("Downloading...")
 
-    audioFile = myhtml.GetRequestsContent(audioUrl, pageUrl)
+    audioFile = myhtml.getRequestsContent(audioUrl, pageUrl)
     with open('temp/audio_'+video_id+'.mp3', 'wb') as f:
         f.write(audioFile)
-    videoFile = myhtml.GetRequestsContent(videoUrl, pageUrl)
+    videoFile = myhtml.getRequestsContent(videoUrl, pageUrl)
     with open('temp/video_'+video_id+'.mp4', 'wb') as f:
         f.write(videoFile)
 
@@ -30,5 +30,5 @@ def GetMP4ByBid(video_id, ffmpeg_config="-c:v copy -c:a aac -strict experimental
 
     # 此处还应当删除临时文件
 
-
-GetMP4ByBid("BV1sk4y1k73b")
+if __name__ == "__main__":  
+    getMP4ByBid("BV1sk4y1k73b")

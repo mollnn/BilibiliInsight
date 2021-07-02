@@ -7,7 +7,7 @@ import threading
 import myhtml
 import biliSearch
 
-def SaveDanmuList(list, filename, bid):
+def saveDanmuList(list, filename, bid):
     reDanmu = re.compile(
         r'<d p="(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?)">(.*?)</d>')
     listDanmu = re.findall(reDanmu, list)
@@ -32,29 +32,29 @@ def SaveDanmuList(list, filename, bid):
     fileOutput.close()
 
 
-def GetDanmuByCid(queryCid):
+def getDanmuByCid(queryCid):
     urlDanmuXml = 'https://comment.bilibili.com/'+queryCid+'.xml'
-    strDanmuXml = myhtml.GetRequestsContentUtf8(urlDanmuXml)
+    strDanmuXml = myhtml.getRequestsContentUtf8(urlDanmuXml)
     return strDanmuXml
 
 
-def GetCidByBid(queryBid):
+def getCidByBid(queryBid):
     urlGetCid = "https://api.bilibili.com/x/player/pagelist?bvid=" + \
         queryBid + "&jsonp=jsonp"
-    strCidJson = myhtml.GetRequestsContentUtf8(urlGetCid)
+    strCidJson = myhtml.getRequestsContentUtf8(urlGetCid)
     jsonCid = json.loads(strCidJson)
     print(jsonCid["data"])
     return str(jsonCid["data"][0]["cid"])
 
 
-def GetDanmuByBid(queryBid):
-    queryCid = GetCidByBid(queryBid)
-    return GetDanmuByCid(queryCid)
+def getDanmuByBid(queryBid):
+    queryCid = getCidByBid(queryBid)
+    return getDanmuByCid(queryCid)
 
-def GetDanmuByBids(listBid):
+def getDanmuByBids(listBid):
     print(listBid)
     for itemBid in listBid:
-        SaveDanmuList(GetDanmuByBid(itemBid), 'outputdanmu/' +
+        saveDanmuList(getDanmuByBid(itemBid), 'outputdanmu/' +
                       itemBid+'.danmu.json', itemBid)
     print("Thread finish")
 
@@ -62,11 +62,11 @@ def GetDanmuByBids(listBid):
 if __name__ == "__main__":
     threadHandles = []
     timeStart = time.time()
-    for page in range(1,2):
-        listBid = biliSearch.GetBidsBySearch("老番茄", page)
+    for page in range(1,5):
+        listBid = biliSearch.getBidsBySearch("老番茄", page)
         listBid = list(set(listBid))
         # GetDanmuByBids(listBid)
-        threadHandles += [threading.Thread(target=GetDanmuByBids,
+        threadHandles += [threading.Thread(target=getDanmuByBids,
                                            name="Thread "+str(page), args=(listBid,))]
     for threadHandle in threadHandles:
         threadHandle.start()
