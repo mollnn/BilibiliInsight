@@ -7,6 +7,7 @@ import threading
 import myhtml
 import biliSearch
 
+
 def saveDanmuList(list, filename, bid):
     reDanmu = re.compile(
         r'<d p="(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?)">(.*?)</d>')
@@ -51,7 +52,13 @@ def getDanmuByBid(queryBid):
     queryCid = getCidByBid(queryBid)
     return getDanmuByCid(queryCid)
 
-def getDanmuByBids(listBid):
+
+def saveDanmuByBid(queryBid):
+    saveDanmuList(getDanmuByBid(queryBid), 'outputdanmu/' +
+                  queryBid+'.danmu.json', queryBid)
+
+
+def saveDanmuByBids(listBid):
     print(listBid)
     for itemBid in listBid:
         saveDanmuList(getDanmuByBid(itemBid), 'outputdanmu/' +
@@ -62,11 +69,11 @@ def getDanmuByBids(listBid):
 if __name__ == "__main__":
     threadHandles = []
     timeStart = time.time()
-    for page in range(1,5):
+    for page in range(1, 5):
         listBid = biliSearch.getBidsBySearch("老番茄", page)
         listBid = list(set(listBid))
         # GetDanmuByBids(listBid)
-        threadHandles += [threading.Thread(target=getDanmuByBids,
+        threadHandles += [threading.Thread(target=saveDanmuByBids,
                                            name="Thread "+str(page), args=(listBid,))]
     for threadHandle in threadHandles:
         threadHandle.start()
