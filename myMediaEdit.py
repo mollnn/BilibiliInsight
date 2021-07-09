@@ -19,5 +19,5 @@ def edit(clip_desc_list, output_filename):
 if __name__ == '__main__':
     bid = "BV16K4y1h7eq"
     media_filename = "output/{bid}.mp4".format(bid=bid)
-    edit([{"filename": media_filename, "start": 0, "duration": 1}, {
-        "filename": media_filename, "start": 10, "duration": 1}, {"filename": media_filename, "start": 20, "duration": 1}], "output_edit/1.mp4")
+    edit([{"filename": media_filename, "start": 0, "duration": 2}, {
+        "filename": media_filename, "start": 10, "duration": 5}, {"filename": media_filename, "start": 20, "duration": 3}], "output_edit/1.mp4")
